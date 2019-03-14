@@ -1,0 +1,23 @@
+CREATE FUNCTION getNthHighestSalary(@N INT) RETURNS INT AS
+BEGIN
+	declare @total_count int;
+	set @total_count = (select count(distinct(Salary)) from Employee);
+	Declare @Result INT;
+
+IF(@N > @total_count OR @N < 0 OR @N = null) /* needed to avoid N greater than rows availble */
+BEGIN
+	set @Result = NULL;
+END
+
+ELSE
+    Begin
+    SELECT Top 1 @Result = Salary
+    FROM ( SELECT distinct TOP (@N) Salary FROM Employee ORDER BY Salary desc) sub 
+    ORDER BY Salary asc;
+END
+
+RETURN (
+/* Write your T-SQL query statement below. */
+    select @Result
+);
+END  
